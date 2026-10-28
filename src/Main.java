@@ -1,5 +1,6 @@
 import entities.Contract;
 import services.ContractService;
+import services.PagSafeService;
 import services.PaypalService;
 
 void main() {
@@ -17,12 +18,27 @@ void main() {
     System.out.print("Enter the number of installments: ");
     int installment = sc.nextInt();
     Contract contract = new Contract(numberContract, date, valueContract);
-    ContractService contractService = new ContractService(new PaypalService());
-    System.out.println("Installments:");
-    System.out.println("Calculations (1% simple monthly interest + 2% payment fee):");
-    contractService.processContract(contract, installment);
+    System.out.print("Enter the type format payment: (payPal=pay/pagSafe=pag) : ");
+    sc.nextLine();
+    String formatPayment = sc.nextLine();
 
-    contract.showInstallments();
+    if(formatPayment.equals("pay")) {
+        ContractService contractService = new ContractService(new PaypalService());
+        System.out.println("Payment method: PayPal");
+        System.out.println("Installments:");
+        System.out.println("Calculations (1% simple monthly interest + 2% payment fee):");
+        contractService.processContract(contract, installment);
+        contract.showInstallments();
+    } else {
+        ContractService contractService = new ContractService(new PagSafeService());
+        System.out.println("Payment method: PagSafe");
+        System.out.println("Installments:");
+        System.out.println("Calculations (1% simple monthly interest + 5% payment fee):");
+        contractService.processContract(contract, installment);
+        contract.showInstallments();
+    }
+
+
 
 
 }
